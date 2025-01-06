@@ -118,6 +118,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+import os
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -125,6 +126,7 @@ STATICFILES_DIRS = [
 ]
 # You might also want to include this for collecting static files when deploying
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directory to collect static files to
 
 
 
