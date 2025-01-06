@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialIQ - Landing Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'analytics/styles.css' %}">
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.56/build/spline-viewer.js"></script>
+</head>
+<body>
+    <div class="overlay">
+        <div class="landing-container">
+            <h1 id="Welcome">Welcome to SocialIQ</h1>
+            <p id="p1">Your one-stop solution for Social Media Analytics and AI-powered Chat.</p>
+            <div class="button-container">
+                <!-- Dashboard button -->
+                <button onclick="location.href='{% url 'dashboard' %}'" class="button left-button">Visit Dashboard</button>
+                <!-- Chat with AI button -->
+                <button onclick="location.href='{% url 'chat_with_ai' %}'" class="button right-button">Chat with AI</button>
+                <spline-viewer url="https://prod.spline.design/4fOZrzCGOsJqUeuB/scene.splinecode"></spline-viewer>
+            </div>
+        </div>
+    </div>
+    
+    
+    <style>
+        /* Hide the logo injected by the framework */
+        a#logo {
+            display: none !important;
+        }
+    </style>
+</body>
+</html>

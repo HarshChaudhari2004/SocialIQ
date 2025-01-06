@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialIQ - Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'analytics/dashboard.css' %}">
+    <!-- Add C3.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css">
+    <!-- Load libraries first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Social Media Performance Insights</h1>
+            <div>
+                <select id="post-type">
+                    <option value="all">All Types</option>
+                    <option value="reel">Reels</option>
+                    <option value="carousel">Carousel</option>
+                    <option value="static">Static</option>
+                </select>
+                <input type="date" id="start-date">
+                <input type="date" id="end-date">
+            </div>
+        </header>
+
+        <div class="grid-container">
+            <div class="card">
+                <h2>Post Distribution</h2>
+                <div id="post-distribution-chart" class="chart"></div>
+            </div>
+            <div class="card">
+                <h2>Average Engagement by Post Type</h2>
+                <div id="post-comparison-chart" class="chart"></div>
+            </div>
+            <div class="card engagement-summary">
+                <h2>Engagement Summary</h2>
+                <div>Total Likes: <span id="total-likes">0</span></div>
+                <div>Total Comments: <span id="total-comments">0</span></div>
+                <div>Total Shares: <span id="total-shares">0</span></div>
+            </div>
+            <div class="card full-width">
+                <h2>Engagement Over Time</h2>
+                <div id="engagement-over-time-chart" class="chart"></div>
+            </div>
+            <div class="card full-width">
+                <h2>Data Preview</h2>
+                <div class="data-preview">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Post ID</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Likes</th>
+                                <th>Shares</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Load your script just once at the end -->
+    <script src="{% static 'analytics/scripts.js' %}"></script>
+</body>
+</html>
