@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-(a@t46!u1zfu$g8j6vpt3m%k$a)8#6&=4lo$@03u^c776$_03(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['socialiq.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['social-iq.onrender.com', 'localhost', '127.0.0.1']
 
 
 
