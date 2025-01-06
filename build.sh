@@ -3,10 +3,6 @@
 # Exit the script as soon as any command fails
 set -e
 
-# Update package list and install dependencies
-echo "Installing system dependencies..."
-sudo apt-get update
-sudo apt-get install -y python3-pip python3-dev libpq-dev
 
 # Install Python dependencies from requirements.txt
 echo "Installing Python dependencies..."
