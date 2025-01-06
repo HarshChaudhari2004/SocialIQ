@@ -44,7 +44,7 @@ body {
     justify-content: space-between;
     width: 80%;
     position: absolute;
-    bottom: 2rem; /* Slightly above the bottom */
+    bottom: 10rem; /* Slightly above the bottom */
 }
 
 .button {
@@ -67,12 +67,12 @@ body {
 /* Position the buttons */
 .left-button {
     position: absolute;
-    left: 10%;
+    left: 5%;
 }
 
 .right-button {
     position: absolute;
-    right: 10%;
+    right: 5%;
 }
 
 spline-viewer {
