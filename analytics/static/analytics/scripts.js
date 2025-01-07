@@ -47,6 +47,13 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
         Reel: '#28a745',
         Carousel: '#dc3545'
       }
+    },
+    tooltip: {
+      contents: function (d) {
+        return `<div style="background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+                  <strong style="color:${d[0].color}">${d[0].name}</strong>: ${d[0].value}
+                </div>`;
+      }
     }
   });
 
@@ -134,9 +141,9 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
           ['Shares', ...filteredData.shares]
         ],
         types: {
-          Likes: 'line',
-          Comments: 'line',
-          Shares: 'line'
+          Likes: 'spline',
+          Comments: 'spline',
+          Shares: 'spline'
         },
         colors: {
           Likes: '#1f77b4',
@@ -148,7 +155,7 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
         x: {
           type: 'timeseries',
           tick: {
-            rotate: 45,
+            rotate: 90,
             multiline: false,
             format: '%Y-%m-%d',
             count: Math.ceil(filteredData.dates.length / 7) // Show tick every 7 days
@@ -162,7 +169,21 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
         }
       },
       padding: {
-        left: 60 // Add more padding for y-axis label
+        left: 100 // Add more padding for y-axis label
+      },
+      interaction: {
+        enabled: true
+      },
+      tooltip: {
+        contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+          let tooltipContent = `<div style="background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+                                  <strong>${defaultTitleFormat(d[0].x)}</strong>`;
+          d.forEach(item => {
+            tooltipContent += `<br><span style="color:${color(item)}">${item.name}</span>: ${item.value}`;
+          });
+          tooltipContent += `</div>`;
+          return tooltipContent;
+        }
       }
     });
   }
@@ -203,8 +224,12 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
           ['Comments', ...avgEngagement.map(d => d.avgComments)],
           ['Shares', ...avgEngagement.map(d => d.avgShares)]
         ],
-        type: 'bar',
-        groups: [['Likes', 'Comments', 'Shares']]
+        type: 'bar'
+    },
+    bar: {
+        width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
       },
       axis: {
         x: {
@@ -220,7 +245,22 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
       },
       bar: {
         width: {
-          ratio: 0.7
+          ratio: 0.7 // this makes bar width 70% of length between ticks
+        }
+      },
+      padding: {
+        top: 5,
+
+      },
+      tooltip: {
+        contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+          let tooltipContent = `<div style="background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+                                  <strong>${defaultTitleFormat(d[0].x)}</strong>`;
+          d.forEach(item => {
+            tooltipContent += `<br><span style="color:${color(item)}">${item.name}</span>: ${item.value}`;
+          });
+          tooltipContent += `</div>`;
+          return tooltipContent;
         }
       }
     });
@@ -229,7 +269,7 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
   // Populate Data Preview Table
   function populateDataTable(data) {
     const tbody = document.querySelector('#data-table tbody');
-    const previewData = data.slice(0, 100); // Show first 10 rows
+    const previewData = data.slice(0, 100); // Show first 100 rows
 
     tbody.innerHTML = previewData.map(row => `
       <tr>
@@ -243,6 +283,37 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
     `).join('');
   }
 
+  // Populate Engagement Summary by Post Type
+  function populateEngagementSummaryByType(postType) {
+    const summaryLikes = document.getElementById('summary-likes');
+    const summaryComments = document.getElementById('summary-comments');
+    const summaryShares = document.getElementById('summary-shares');
+
+    let filteredData = data;
+    if (postType !== 'all') {
+      filteredData = data.filter(d => d.Type.toLowerCase() === postType);
+    }
+
+    const totalLikes = filteredData.reduce((a, b) => a + (+b.Likes), 0);
+    const totalComments = filteredData.reduce((a, b) => a + (+b.Comments), 0);
+    const totalShares = filteredData.reduce((a, b) => a + (+b.Shares), 0);
+
+    summaryLikes.textContent = totalLikes.toLocaleString();
+    summaryComments.textContent = totalComments.toLocaleString();
+    summaryShares.textContent = totalShares.toLocaleString();
+  }
+
+  // Populate Engagement Summary
+  function populateEngagementSummary() {
+    const totalLikes = data.reduce((a, b) => a + (+b.Likes), 0);
+    const totalComments = data.reduce((a, b) => a + (+b.Comments), 0);
+    const totalShares = data.reduce((a, b) => a + (+b.Shares), 0);
+
+    document.getElementById('total-likes').textContent = totalLikes.toLocaleString();
+    document.getElementById('total-comments').textContent = totalComments.toLocaleString();
+    document.getElementById('total-shares').textContent = totalShares.toLocaleString();
+  }
+
   // Update event listeners
   function updateCharts() {
     const startDate = document.getElementById("start-date").value;
@@ -250,27 +321,26 @@ d3.csv("/static/analytics/social-media-analytics.csv").then(function(data) {
     const postType = document.getElementById("post-type").value;
     const filteredData = filterDataByTypeAndDate(postType, startDate, endDate);
     generateEngagementChart(filteredData);
-    generateComparisonChart(data);  // Add this line
+    generateComparisonChart(data);
+    populateEngagementSummary(); // Add this line to update the summary
+  }
+
+  function updateEngagementSummaryByType() {
+    const selectedType = document.getElementById("summary-post-type").value;
+    populateEngagementSummaryByType(selectedType);
   }
 
   // Event listeners
   document.getElementById("start-date").addEventListener("change", updateCharts);
   document.getElementById("end-date").addEventListener("change", updateCharts);
   document.getElementById("post-type").addEventListener("change", updateCharts);
+  document.getElementById("summary-post-type").addEventListener("change", updateEngagementSummaryByType);
 
   // Initial chart generation
   updateCharts();
+  populateEngagementSummary(); // Add this line to populate the summary initially
+  populateEngagementSummaryByType('reel'); // Default selection
 
-  // Populate Engagement Summary
-  const totalLikes = likes.reduce((a, b) => a + b, 0);
-  const totalComments = comments.reduce((a, b) => a + b, 0);
-  const totalShares = shares.reduce((a, b) => a + b, 0);
-
-  document.getElementById('total-likes').textContent = totalLikes.toLocaleString();
-  document.getElementById('total-comments').textContent = totalComments.toLocaleString();
-  document.getElementById('total-shares').textContent = totalShares.toLocaleString();
-
-  // Add these lines after the existing chart generations
-  generateComparisonChart(data);
+  // Populate Data Preview Table
   populateDataTable(data);
 });

@@ -3,6 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background: linear-gradient(90deg, #14051C 0%,  #7c00c4 100%); /* Diagonal gradient with black, light blue, and purple */
   background-color: #000000; /* Dark background */
   color: #ddd; /* Light text color */
 }
@@ -12,14 +13,15 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 20px;
   color: #f5f5f5; /* Light color for text */
 }
 
-/* Header Title */
-header h1 {
-  color: #f5f5f5; /* Light color */
+#post-type, #start-date, #end-date {
+  font-size: 20px;
+  font-weight: bold;
 }
+
 
 /* Input fields and select */
 header input, select {
@@ -28,41 +30,59 @@ header input, select {
   border-radius: 5px;
   background-color: #333; /* Dark background for inputs */
   color: #fff; /* White text color */
+  font-size: 15px;
 }
 
 /* Card Styling */
 .card {
-  background: #2c2c2c; /* Dark background */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Slightly darker shadow */
+  background: linear-gradient(135deg, #002f42, #000000, #3c0071); /* Diagonal gradient with black, light blue, and purple */
+  box-shadow: 10px 10px 6px rgba(124, 67, 224, 0.999); /* Slightly darker shadow */
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
+  color: #fff; /* Ensure text is visible on the gradient */
 }
 
 /* Card headers and text */
 .card h2 {
   color: #f5f5f5;
+  margin: 10px;
 }
 
+#en-likes, #en-comments, #en-shares {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#su-likes, #su-comments, #su-shares {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+#summary-post-type {
+  font-size: 20px;
+  font-weight: bold;
+}
 /* Engagement summary text */
 .engagement-summary div {
   margin: 10px 0;
+  font-size: 15px;
   font-weight: bold;
-  color: #bbb; /* Lighter color for stats */
 }
 
 /* Chart Container */
 .chart {
   margin-left: 40px;
-  color: #fff; /* Ensure charts are visible with light-colored text */
+  color: #ffffff; /* Ensure charts are visible with light-colored text */
 }
 
-/* Grid layout */
+/* Grid layout adjusted for three columns */
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr); /* Changed from 2 to 3 columns */
   gap: 20px;
-  margin-top: 20px;
+  margin: 20px;
 }
 
 /* Full width cards */
@@ -85,22 +105,18 @@ header input, select {
 }
 
 .data-preview th {
-  background-color: #333; /* Dark header for table */
-}
-
-/* Hover Effects for Table Rows */
-.data-preview tr:nth-child(even) {
-  background-color: #444; /* Slightly lighter rows */
+  background-color: #000000; /* Dark header for table */
 }
 
 .data-preview tr:hover {
-  background-color: #555; /* Darker hover effect */
+  background-color: #b15fbf; /* Darker hover effect */
 }
 
 /* Hover Glow effect for Pie Chart */
 .c3-tooltip {
-  background-color: rgba(0, 0, 0, 0.75); /* Dark background for tooltips */
-  color: #fff; /* White text in tooltips */
+  background-color: #000 !important; /* Black background */
+  color: #ffffff !important; /* White text */
+  font-size: large !important;
 }
 
 .c3-chart-arcs path {
@@ -108,5 +124,52 @@ header input, select {
 }
 
 .c3-chart-arcs path:hover {
-  filter: brightness(1.5) drop-shadow(0 0 10px #ff00ff); /* Glow effect */
+  filter: brightness(1.5) drop-shadow(0 0 15px #ff00ff); /* Glow effect */
+}
+
+/* Chart text color */
+.c3 text {
+  fill: #ffffff; /* Light color for chart text */
+  font-size: 15px;
+}
+
+/* Axis color */
+.c3-axis-x path, .c3-axis-x line, .c3-axis-y path, .c3-axis-y line {
+  stroke: #ffffff !important; /* White color for axis */
+}
+
+
+.engagement-summary-by-type select {
+  padding: 10px;
+  border: 1px solid #444; /* Darker borders */
+  border-radius: 5px;
+  background-color: #333; /* Dark background for inputs */
+  color: #fff; /* White text color */
+  margin-bottom: 10px;
+}
+
+.engagement-summary-by-type div {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #bbb; /* Lighter color for stats */
+}
+
+/* Flex layout for Engagement Summary and Summary by Type */
+.engagement-summary-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
 }
