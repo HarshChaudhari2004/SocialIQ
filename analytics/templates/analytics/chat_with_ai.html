@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google Fonts Link For Icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/highlight.min.js"></script>
     <script src="{% static 'analytics/script.js' %}" defer></script>
     <script>
         // Add this to handle any initial errors
@@ -18,11 +21,7 @@
     </script>
 </head>
 <body class="show-chatbot">
-    <!-- New delete button -->
-    <button class="delete-chat-history" title="Delete chat history⚠">
-        <span class="material-symbols-outlined">delete</span>
-    </button>
-
+    
     <div class="chatbot">
         <header>
             <h2>ChatBot</h2>
@@ -30,12 +29,8 @@
 
         <ul class="chatbox">
             <!-- Display all messages from chat history -->
+            <!-- Removed the single typing indicator to avoid duplication -->
         </ul>
-
-        <!-- Loading spinner -->
-        <!-- <div id="loading-spinner" class="loading-spinner" style="display: none;">
-            <p>Loading...</p>
-        </div> -->
 
         <!-- The form to send a message -->
         <form method="POST">
@@ -43,6 +38,9 @@
             <div class="chat-input">
                 <textarea name="message" placeholder="Enter a message" id="user-message"></textarea>
                 <span id="send-btn" class="material-symbols-outlined">send</span>
+                <button type="button" class="delete-chat-history" title="Delete chat history">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
             </div>
         </form>
     </div>

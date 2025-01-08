@@ -168,8 +168,51 @@ header input, select {
   }
 }
 
+/* Add more responsive grid and layout adjustments for the dashboard */
+@media (max-width: 992px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  .chart {
+    margin-left: 0;
+  }
+}
+
 @media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    margin: 10px;
+    align-items: flex-start;
+  }
+  header > div {
+    margin-top: 10px;
+  }
   .grid-container {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    margin: 10px;
+  }
+  .card h2 {
+    font-size: 1.2rem;
+  }
+  header input,
+  select {
+    font-size: 14px;
+    padding: 5px;
+  }
+  #post-type,
+  #start-date,
+  #end-date {
+    font-size: 16px;
+    font-weight: normal;
   }
 }

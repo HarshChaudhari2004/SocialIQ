@@ -2,26 +2,81 @@ const sendChatBtn = document.querySelector("#send-btn");
 const chatbox = document.querySelector(".chatbox");
 const chatInput = document.querySelector(".chat-input textarea");
 const deleteButton = document.querySelector(".delete-chat-history");
-const loadingSpinner = document.getElementById("loading-spinner");
+const typingIndicator = document.querySelector(".typing-indicator");
+
+// Configure marked options
+marked.setOptions({
+    highlight: function(code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            return hljs.highlight(code, { language: lang }).value;
+        }
+        return hljs.highlightAuto(code).value;
+    },
+    breaks: true,
+    gfm: true,
+    tables: true,
+    pedantic: false,
+    sanitize: false
+});
+
+function parseMarkdown(message) {
+    // Removes any script tags and adds role to tables
+    const sanitized = message.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    const withTableRole = sanitized.replace(/<table>/g, '<table role="grid">');
+    // Convert to HTML with all markdown features
+    return marked.parse(withTableRole).trim();
+}
+
+// Create one typing indicator (now "incoming" for consistent styling)
+const typingIndicatorHTML = `
+    <li class="chat incoming typing-indicator" style="display: none;">
+        <span class="material-symbols-outlined">smart_toy</span>
+        <div class="typing">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </li>
+`;
 
 // Function to load chat history from localStorage
 const loadChatHistory = () => {
     const chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
-    chatbox.innerHTML = "";
+    chatbox.innerHTML = ""; // Clear existing content
+    
+    // Add chat history first
     chatHistory.forEach(chat => {
         const messageElement = createChatLi(chat.message, chat.className);
         chatbox.appendChild(messageElement);
     });
+    
+    // Add typing indicator last (but hidden)
+    chatbox.insertAdjacentHTML('beforeend', typingIndicatorHTML);
 };
 
 // Function to create a chat list item (either user or bot)
 const createChatLi = (message, className) => {
     const chatLi = document.createElement("li");
     chatLi.classList.add("chat", className);
-    let chatContent = className === "outgoing" 
-        ? `<p>${message}</p>` 
-        : `<span class="material-symbols-outlined">smart_toy</span><p>${message}</p>`;
-    chatLi.innerHTML = chatContent;
+    
+    if (className === "outgoing") {
+        chatLi.innerHTML = `<p>${message}</p>`;
+    } else {
+        // Sanitize and parse markdown
+        const parsedMessage = parseMarkdown(message);
+        
+        chatLi.innerHTML = `
+            <span class="material-symbols-outlined">robot_2</span>
+            <div class="rich-message" style="color: white;">${parsedMessage}</div>
+        `;
+        
+        // Initialize syntax highlighting
+        requestAnimationFrame(() => {
+            chatLi.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+    }
     return chatLi;
 };
 
@@ -37,12 +92,17 @@ const handleChat = () => {
     const userMessage = chatInput.value.trim();
     if (!userMessage) return;
 
-    // Append user's message immediately
+    // Clear input and add user message
+    chatInput.value = "";
     chatbox.appendChild(createChatLi(userMessage, "outgoing"));
     saveChatHistory(userMessage, "outgoing");
-    chatInput.value = "";
-    
-    // Scroll to bottom after user message
+
+    // Show typing indicator
+    const typingIndicator = document.querySelector(".typing-indicator");
+    if (typingIndicator) {
+        typingIndicator.style.display = "flex";
+        chatbox.appendChild(typingIndicator); // Move to end
+    }
     chatbox.scrollTop = chatbox.scrollHeight;
 
     // Send message to server
@@ -56,25 +116,30 @@ const handleChat = () => {
             'X-CSRFToken': getCookie('csrftoken')
         }
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
     .then(data => {
-        if (data && data.response_text) {
+        // Hide typing indicator
+        typingIndicator.style.display = "none";
+        
+        if (data?.response_text) {
             const botMessage = data.response_text;
-            chatbox.appendChild(createChatLi(botMessage, "incoming"));
+            const messageElement = createChatLi(botMessage, "incoming");
+            chatbox.appendChild(messageElement);
             saveChatHistory(botMessage, "incoming");
-            chatbox.scrollTop = chatbox.scrollHeight;
+            
+            // Scroll to bottom after content is rendered
+            requestAnimationFrame(() => {
+                chatbox.scrollTop = chatbox.scrollHeight;
+            });
         }
     })
     .catch(error => {
         console.error('Error:', error);
+        typingIndicator.style.display = "none";
         const errorMessage = "Sorry, something went wrong. Please try again.";
         chatbox.appendChild(createChatLi(errorMessage, "incoming"));
         saveChatHistory(errorMessage, "incoming");
+        chatbox.scrollTop = chatbox.scrollHeight;
     });
 };
 

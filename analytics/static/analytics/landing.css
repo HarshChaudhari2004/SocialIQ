@@ -84,3 +84,50 @@ spline-viewer {
     z-index: 0;
     pointer-events: auto; /* Ensure spline-viewer gets mouse events */
 }
+
+/* Add responsive adjustments for the landing page */
+@media (max-width: 1024px) {
+  .landing-container h1 {
+    font-size: 2.5rem;
+  }
+  .button-container {
+    bottom: 8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-container h1 {
+    font-size: 2rem;
+  }
+  .button {
+    font-size: 25px;
+    padding: 0.8rem 1.5rem;
+  }
+  .button-container {
+    width: 90%;
+    bottom: 6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-container h1 {
+    font-size: 1.5rem;
+  }
+  .button {
+    font-size: 18px;
+    padding: 0.6rem 1rem;
+  }
+  .button-container {
+    flex-direction: column;
+    gap: 1rem;
+    bottom: 4rem;
+    width: 80%;
+  }
+  .left-button,
+  .right-button {
+    position: static;
+  }
+  body {
+    overflow: auto; /* Allow scrolling on very small screens */
+  }
+}
