@@ -113,6 +113,7 @@ body {
     font-size: 1.2rem;
     line-height: 1.4;
     display: inline-block;
+    text-align: justify;
 }
 
 .chatbox .outgoing .rich-message {
@@ -124,6 +125,7 @@ body {
     font-size: 1.2rem;
     line-height: 1.4;
     display: inline-block;
+    text-align: justify;
 }
 
 .chatbox .chat p {
