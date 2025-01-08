@@ -59,24 +59,18 @@ const createChatLi = (message, className) => {
     const chatLi = document.createElement("li");
     chatLi.classList.add("chat", className);
     
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("rich-message"); // Ensure the rich-message class is added
+
     if (className === "outgoing") {
-        chatLi.innerHTML = `<p>${message}</p>`;
+        messageDiv.innerText = message;  // Set the outgoing message text
     } else {
-        // Sanitize and parse markdown
+        // Sanitize and parse markdown for incoming messages
         const parsedMessage = parseMarkdown(message);
-        
-        chatLi.innerHTML = `
-            <span class="material-symbols-outlined">robot_2</span>
-            <div class="rich-message" style="color: white;">${parsedMessage}</div>
-        `;
-        
-        // Initialize syntax highlighting
-        requestAnimationFrame(() => {
-            chatLi.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightElement(block);
-            });
-        });
+        messageDiv.innerHTML = parsedMessage;
     }
+
+    chatLi.appendChild(messageDiv);
     return chatLi;
 };
 
