@@ -13,11 +13,7 @@ SocialIQ is a Django-based application for analyzing social media engagement dat
    ```bash
    python manage.py migrate
    ```
-4. Collect static files:
-   ```bash
-   python manage.py collectstatic --noinput
-   ```
-5. Start the Django development server:
+4. Start the Django development server:
    ```bash
    python manage.py runserver
    ```
