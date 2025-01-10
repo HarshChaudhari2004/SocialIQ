@@ -9,4 +9,20 @@ SocialIQ is a Django-based application for analyzing social media engagement dat
    ```bash
    pip install --no-cache-dir -r requirements.txt
    ```
-   
+3. Apply database migrations:
+   ```bash
+   python manage.py migrate
+   ```
+4. Collect static files:
+   ```bash
+   python manage.py collectstatic --noinput
+   ```
+5. Start the Django development server:
+   ```bash
+   python manage.py runserver
+   ```
+
+## Features
+- **Landing Page**: A welcoming landing page with options to visit the dashboard or chat with the AI.
+- **Dashboard**: A comprehensive dashboard that provides insights and visualizations of social media engagement data.
+- **Chat with AI**: An interactive chat interface to communicate with an AI chatbot for various queries and assistance.
